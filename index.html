@@ -31,7 +31,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15p
 .presents{margin:0;font:600 12px var(--body);letter-spacing:.28em;text-transform:uppercase;color:var(--bill-gold)}
 .bill h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,11vw,68px);line-height:.95;margin:10px 0 0;letter-spacing:-.01em;color:var(--bill-ink)}
 .bill .sub{color:var(--bill-ink);opacity:.85;margin:12px 0 0;font-style:italic;font-family:var(--display)}
-.kind{margin:6px 0 0;font:600 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--bill-ink);opacity:.6}
+.credits{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin:14px 0 4px}
+.credits p{margin:0;font:400 17px var(--display);color:var(--bill-ink)}
+.credits span{display:block;font:600 10px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--bill-gold);margin-bottom:2px}
+.kind{margin:10px 0 0;font:600 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--bill-ink);opacity:.6}
 .scene{display:block;width:100%;max-width:100%;height:auto;margin-top:8px}
 .bill-foot{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;padding:10px 16px 14px;background:rgba(0,0,0,.22);font-size:13px;color:var(--bill-ink)}
 .bill-foot b{color:var(--bill-gold);font-weight:600}
@@ -90,12 +93,13 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
 </style>
 
 <div class="wrap">
-<p class="updated" id="lastUpdated"><b>Last updated:</b> Saturday, October 31, 2026 at 6:20 PM · Calendar v6</p>
+<p class="updated" id="lastUpdated"><b>Last updated:</b> Saturday, October 31, 2026 at 7:04 PM · Calendar v6</p>
 <header class="bill">
   <div class="bill-text">
     <p class="presents">ITOPA presents</p>
     <h1>See How<br>They Run</h1>
     <p class="sub">A farce in three acts by Philip King</p>
+    <div class="credits"><p><span>Directed by</span> Vanessa Page</p><p><span>Produced by</span> Doug Robinson</p></div>
     <p class="kind">Rehearsal &amp; performance calendar</p>
   </div>
   <svg class="scene" viewBox="0 0 720 132" preserveAspectRatio="xMidYMax meet" role="img" aria-label="A vicarage hallway of four doors, one flung open, with a trail of running footprints">

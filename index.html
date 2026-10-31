@@ -1,0 +1,268 @@
+<title>See How They Run Rehearsals</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a stage manager's call sheet — sticky "who are you" chips, the next call up top, then the season as a dated list banded by phase. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#1b2230; --muted:#5b6577; --line:#d5dbe3;
+  --accent:#7a1f3d; --accent-ink:#ffffff; --chip:#e3e8ee;
+  --p0:#6b7a90; --p1:#1f7a6e; --p2:#2f5fa8; --p3:#6a4bb0; --p4:#c06a12; --p5:#b2343c; --show:#a8820f; --amber:#d99a06;
+  --off:#9aa3b2;
+  --display:"Young Serif", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12151c; --surface:#1b2029; --ink:#e7eaf0; --muted:#9aa4b5; --line:#2c3340;
+  --accent:#e0789a; --accent-ink:#1a0d13; --chip:#262d39;
+  --p0:#8e9bb0; --p1:#4cc0ad; --p2:#78a4ec; --p3:#a990ec; --p4:#f0a04b; --p5:#ef7b82; --show:#e3c04f; --amber:#f2bd3c;
+  --off:#5d6676; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12151c; --surface:#1b2029; --ink:#e7eaf0; --muted:#9aa4b5; --line:#2c3340;
+  --accent:#e0789a; --accent-ink:#1a0d13; --chip:#262d39;
+  --p0:#8e9bb0; --p1:#4cc0ad; --p2:#78a4ec; --p3:#a990ec; --p4:#f0a04b; --p5:#ef7b82; --show:#e3c04f; --amber:#f2bd3c;
+  --off:#5d6676; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+header h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,7vw,40px);line-height:1.05;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:6px 0 0}
+.runs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
+.runs b{color:var(--ink);font-weight:600}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.picker{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin:16px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding:10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.picker label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 11px;font:500 13px var(--body);cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip:focus-visible,.toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.togrow{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;color:var(--muted)}
+.toggle{accent-color:var(--accent);width:16px;height:16px}
+.next{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:14px 16px}
+.next .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.next .when{font-family:var(--display);font-size:22px;margin:4px 0 2px}
+.next .what{color:var(--muted)}
+h2{font-family:var(--display);font-weight:400;font-size:22px;margin:28px 0 8px}
+.phase{display:flex;align-items:baseline;gap:8px;margin:22px 0 8px;padding-top:10px;border-top:2px solid var(--pc)}
+.phase strong{color:var(--pc);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.phase span{color:var(--muted);font-size:13px}
+.day{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.date{text-align:center;font-variant-numeric:tabular-nums}
+.date .dow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.date .num{font-family:var(--display);font-size:26px;line-height:1}
+.date .mon{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.time{font-weight:600;font-variant-numeric:tabular-nums}
+.badge{font:600 11px var(--mono);letter-spacing:.04em;padding:2px 7px;border-radius:4px;color:var(--surface);background:var(--pc)}
+.flag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid var(--amber);color:var(--amber)}
+.work{margin:4px 0}
+.meta{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px;color:var(--muted)}
+.pages{margin-right:6px;font-variant-numeric:tabular-nums}
+.code{font:600 11px var(--mono);min-width:22px;text-align:center;padding:2px 4px;border-radius:4px;background:var(--chip);color:var(--ink)}
+.code.me{background:var(--accent);color:var(--accent-ink)}
+.code.full{padding:2px 7px}
+.notcalled .work,.notcalled .time{color:var(--off)}
+.notcalled .badge{background:var(--off)}
+.status{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.status.yes{color:var(--p1)} .status.no{color:var(--off)}
+.past{opacity:.5}
+.break{padding:14px;margin:10px 0;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center}
+.keys{display:grid;gap:8px}
+.key{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;font-size:14px}
+.key b{font-variant-numeric:tabular-nums}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;font-size:14px}
+.legend div{display:flex;gap:8px;align-items:center}
+.small{font-size:13px;color:var(--muted)}
+.updated{display:inline-block;margin:0 0 14px;padding:5px 10px;border-radius:6px;background:var(--chip);color:var(--muted);font-size:13px}
+.updated b{color:var(--accent);font-weight:700}
+footer{margin-top:32px;font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<p class="updated" id="lastUpdated"><b>Last updated:</b> Saturday, October 31, 2026 at 5:31 PM · November changes added</p>
+<header>
+  <h1>See How They Run</h1>
+  <p class="sub">A farce in three acts by Philip King · Rehearsal &amp; performance calendar</p>
+  <div class="runs"><span>Opens <b>Fri Jan 29, 2027</b></span><span>Closes <b>Sun Feb 7, 2027</b></span><span id="countdown"></span></div>
+</header>
+
+<div class="picker">
+  <label for="chips">Show calls for</label>
+  <div class="chips" id="chips" role="group" aria-label="Choose a cast or crew member"></div>
+  <div class="togrow"><input type="checkbox" class="toggle" id="onlyMine"><label for="onlyMine" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;font-weight:500">Hide days I'm not called</label></div>
+</div>
+
+<div class="next" id="next"></div>
+
+<div id="schedule"></div>
+
+<h2>Key dates</h2>
+<div class="keys">
+  <div class="key"><b>Nov 16</b><span>Lionel joins the company (the Bishop's first call is Nov 18)</span></div>
+  <div class="key"><b>Nov 2</b><span>Extended to 10 PM for the Act III read-through</span></div>
+  <div class="key"><b>Nov 4</b><span>No rehearsal (moved to Sun Nov 8, 10 AM)</span></div>
+  <div class="key"><b>Nov 8 &amp; 15</b><span>Morning calls, 10 AM–12 PM</span></div>
+  <div class="key"><b>Nov 18–23</b><span>Costume measurements</span></div>
+  <div class="key"><b>Nov 30</b><span>Blocking complete</span></div>
+  <div class="key"><b>Dec 9</b><span>Stage manager leads (director absent)</span></div>
+  <div class="key"><b>Dec 16</b><span>Costume fittings during the stumble-through</span></div>
+  <div class="key"><b>Dec 20–26</b><span>Winter break, no rehearsals</span></div>
+  <div class="key"><b>Dec 27</b><span>Rehearsal pieces from here on: clerical jackets &amp; collars, Clive's uniform, show shoes. Calls become 3 hours.</span></div>
+  <div class="key"><b>Dec 30</b><span>Costumes complete</span></div>
+  <div class="key"><b>Jan 3</b><span>Costume parade</span></div>
+  <div class="key"><b>Jan 4</b><span>Full costumes at every rehearsal from here on</span></div>
+  <div class="key"><b>Jan 17–23</b><span>Tech week, every night</span></div>
+  <div class="key"><b>Jan 29</b><span>Opening night</span></div>
+</div>
+
+<h2>Who's who</h2>
+<div class="legend" id="castLegend"></div>
+<p class="small">Christina Fyn and Laura Penny (backstage crew) are called to every rehearsal and performance. Performance call is 1 hour before curtain.</p>
+
+<h2>Rehearsal types</h2>
+<div class="legend">
+  <div><span class="code">READ</span>Read-through</div>
+  <div><span class="code">BLOCK</span>Blocking new pages</div>
+  <div><span class="code">REVIEW</span>Review existing blocking</div>
+  <div><span class="code">DETAIL</span>Detail / character work</div>
+  <div><span class="code">WORK</span>Scene work</div>
+  <div><span class="code">RUN</span>Run / stumble-through</div>
+  <div><span class="code">POLISH</span>Spot work + run</div>
+  <div><span class="code">COSTUME</span>Costume parade</div>
+  <div><span class="code">TECH</span>Cue-to-cue / tech run</div>
+  <div><span class="code">DRESS</span>Dress rehearsal</div>
+  <div><span class="code">NOTES</span>Brush-up / notes</div>
+  <div><span class="code">SHOW</span>Performance</div>
+</div>
+
+<footer>Your choice of cast member is remembered on this device only.</footer>
+</div>
+
+<script>
+const CAST=[["I","Ida","the maid"],["S","Miss Skillion",""],["L","Rev. Lionel Toop",""],["P","Penelope Toop",""],["C","Cpl. Clive Winton",""],["X","The Intruder","“The Man”"],["B","The Bishop of Lax",""],["H","Rev. Arthur Humphrey",""],["T","Sgt. Towers",""],["CREW","Crew","Christina Fyn & Laura Penny"]];
+const SHORT={I:"Ida",S:"Skillion",L:"Lionel",P:"Penelope",C:"Clive",X:"Intruder",B:"Bishop",H:"Humphrey",T:"Towers",CREW:"Crew"};
+const PHASES=[
+ {id:0,name:"Phase 0 · Early start",note:"Without Lionel & the Bishop · 2-hr calls",c:"--p0"},
+ {id:1,name:"Phase 1 · Blocking",note:"Lionel & the Bishop join · 2-hr calls",c:"--p1"},
+ {id:2,name:"Phase 2 · Scene work",note:"2-hr calls",c:"--p2"},
+ {id:3,name:"Phase 3 · Runs & costumes",note:"3-hr calls",c:"--p3"},
+ {id:4,name:"Phase 4 · Tech week",note:"All cast & crew, every night",c:"--p4"},
+ {id:5,name:"Phase 5 · Dress rehearsals",note:"3-hr calls",c:"--p5"},
+ {id:6,name:"Performances",note:"Called 1 hour before curtain",c:"--show"}];
+const A="ALL";
+// [date, phase, time, type, work, pages, called, flag]
+const D=[
+["2026-10-25",0,"5:30–7:00 PM","READ","Company read-through of the full script (stage manager reads Lionel, the Bishop and Miss Skillion)","pp. 5–101","IPCXHT"],
+["2026-10-26",0,"7:00–9:00 PM","BLOCK","Act I: opening; Clive arrives; Penelope & Clive","pp. 5–6, 18–24","ISPC"],
+["2026-10-28",0,"7:00–9:00 PM","BLOCK","Act I: Penelope & Clive to the Act I curtain","pp. 25–32","ISPC"],
+["2026-11-01",0,"2:30–4:30 PM","BLOCK","Act II: Penelope & Clive alone; Act III: Clive & Humphrey","pp. 53–55; 71–76","IPCXH"],
+["2026-11-02",0,"7:00–10:00 PM","READ+BLOCK","Act III read-through; block Act II: Ida & Miss Skillion after the knock-out (p. 40); Act III: Humphrey arrives (pp. 63–70)","Read pp. 62–101; block p. 40, pp. 63–70","ISPCXHT","Extended · Act III read added"],
+["2026-11-08",0,"10:00 AM–12:00 PM","BLOCK+REVIEW","Block Act III: the Intruder returns (pp. 77–81); review Act I: Clive's arrival to curtain (pp. 18–32)","Block pp. 77–81; review pp. 18–32","IPCXH","Moved from Nov 4 · 10 AM start"],
+["2026-11-09",0,"7:00–9:00 PM","REVIEW","Act III review: Humphrey's arrival through the Intruder's return","pp. 63–81","ISPCXH"],
+["2026-11-11",0,"7:00–9:00 PM","REVIEW","Miss Skillion's Act I scenes with Penelope & Clive; review Act II Penelope & Clive","pp. 21–23, 27–32; 53–55","SPC","Remembrance Day"],
+["2026-11-15",0,"10:00 AM–12:00 PM","DETAIL","Detail work: Clive, the Intruder & Humphrey; Sergeant Towers's entrance (stage manager reads other roles)","pp. 74–84","CXHT","10 AM start"],
+["2026-11-16",1,"7:00–9:00 PM","BLOCK","Lionel joins the company. Act I: the Toops at home","pp. 9–12","SLP"],
+["2026-11-18",1,"7:00–9:00 PM","BLOCK","The Bishop joins. Act II: Clive meets the Bishop; chaos to curtain","pp. 48–52; 58–61","SLPCB"],
+["2026-11-22",1,"2:30–4:30 PM","BLOCK","Act I: the Toops at home to Lionel's exit; Act II: the Bishop arrives","pp. 7–8, 13–17; 41–47, 50","ILPCB"],
+["2026-11-23",1,"7:00–9:00 PM","BLOCK","Act II: night at the vicarage and the Intruder; chaos builds; Act III: the chase","pp. 33–40; 56–57; 62–63","ISLPCXB"],
+["2026-11-25",1,"7:00–9:00 PM","BLOCK","Act III: Sergeant Towers; add Lionel's crosses (pp. 65, 78)","pp. 82–88; 65, 78","ILPCXBHT"],
+["2026-11-29",1,"2:30–4:30 PM","BLOCK","Act III finale, part 1 (Miss Skillion picks up Nov 30)","pp. 89–96","ILPCXBHT"],
+["2026-11-30",1,"7:00–9:00 PM","BLOCK","Act III finale, part 2; review the finale. Blocking complete.","pp. 97–101; 89–101",A],
+["2026-12-02",2,"7:00–9:00 PM","WORK","Act I scene work: opening and the Toops at home","pp. 5–17","ISLP"],
+["2026-12-06",2,"2:30–4:30 PM","WORK","Act I scene work: Clive's arrival to curtain (Miss Skillion picks up Dec 7)","pp. 18–32","IPC"],
+["2026-12-07",2,"7:00–9:00 PM","WORK","Miss Skillion pick-up, Act I (Clive first 20 min); Act II scene work to the Bishop's arrival","pp. 18–20, 31–32; 33–47","ISLPCXB"],
+["2026-12-09",2,"7:00–9:00 PM","REVIEW","Review and run existing blocking only (director absent)","pp. 48–61","ISLPCB","Stage manager leads"],
+["2026-12-13",2,"2:30–4:30 PM","WORK","Act III scene work: the chase through the Intruder's return","pp. 62–81","ISLPCXBH"],
+["2026-12-14",2,"7:00–9:00 PM","WORK","Act III scene work: Sergeant Towers to curtain","pp. 82–101",A],
+["2026-12-16",2,"7:00–9:00 PM","RUN","Stumble-through of the full show; costume fittings during off-stage time","pp. 5–101",A,"Costume fittings"],
+["BREAK"],
+["2026-12-27",3,"2:30–5:30 PM","RUN","Run Act I with notes; Act III scene work; rehearsal costume pieces begin","pp. 5–32; 63–81","ISLPCXH"],
+["2026-12-28",3,"7:00–10:00 PM","RUN","Run Act II with notes; rework the Bishop's scenes","pp. 33–61","ISLPCXB"],
+["2026-12-30",3,"7:00–10:00 PM","RUN","Run Act III with notes; the Bishop picks up the chase (pp. 62–63); costumes complete","pp. 62–101",A],
+["2027-01-03",3,"2:30–5:30 PM","COSTUME","Costume parade (first hour); run Acts I & II in costume","pp. 5–61",A,"Costume parade"],
+["2027-01-04",3,"7:00–10:00 PM","RUN","Full run in costume, with notes; full costumes worn from here on","pp. 5–101",A],
+["2027-01-06",3,"7:00–10:00 PM","WORK","Chase and clergy-costume sequences, with quick changes","pp. 56–63; 82–101",A],
+["2027-01-10",3,"2:30–5:30 PM","RUN","Full run in costume, with notes","pp. 5–101",A],
+["2027-01-11",3,"7:00–10:00 PM","POLISH","Spot work Acts I & II; run Act III","pp. 5–61; 62–101",A],
+["2027-01-13",3,"7:00–10:00 PM","RUN","Final pre-tech run in costume with all props","pp. 5–101",A],
+["2027-01-17",4,"2:30–5:30 PM","TECH","Cue-to-cue, Acts I & II","pp. 5–61",A],
+["2027-01-18",4,"7:00–10:00 PM","TECH","Cue-to-cue, Act III","pp. 62–101",A],
+["2027-01-19",4,"7:00–10:00 PM","TECH","Technical run","pp. 5–101",A],
+["2027-01-20",4,"7:00–10:00 PM","TECH","Technical run in costume","pp. 5–101",A],
+["2027-01-21",4,"7:00–10:00 PM · cast call 6:30","DRESS","Dress & tech run with hair and makeup","pp. 5–101",A],
+["2027-01-22",4,"7:00–10:00 PM · cast call 6:30","DRESS","Dress run","pp. 5–101",A],
+["2027-01-23",4,"7:00–10:00 PM · cast call 6:30","DRESS","Dress run under performance conditions","pp. 5–101",A],
+["2027-01-24",5,"2:30–5:30 PM · cast call 1:30","DRESS","Dress rehearsal, with notes","pp. 5–101",A],
+["2027-01-25",5,"7:00–10:00 PM · cast call 6:00","DRESS","Dress rehearsal, with notes","pp. 5–101",A],
+["2027-01-27",5,"7:00–10:00 PM · cast call 6:00","DRESS","Final dress rehearsal under performance conditions","pp. 5–101",A,"Final dress"],
+["2027-01-29",6,"Curtain 7:30 PM · call 6:30","SHOW","Opening night","",A,"★ Opening night"],
+["2027-01-30",6,"Curtain 7:30 PM · call 6:30","SHOW","Performance","",A],
+["2027-01-31",6,"Curtain 2:00 PM · call 1:00","SHOW","Performance","",A],
+["2027-02-03",6,"7:00–10:00 PM","NOTES","Brush-up rehearsal and notes (no rehearsal Mon Feb 1)","pp. 56–101",A],
+["2027-02-04",6,"Curtain 7:30 PM · call 6:30","SHOW","Performance","",A],
+["2027-02-05",6,"Curtain 7:30 PM · call 6:30","SHOW","Performance","",A],
+["2027-02-06",6,"Curtain 2:00 PM · call 1:00","SHOW","Performance","",A],
+["2027-02-07",6,"Curtain 2:00 PM · call 1:00","SHOW","Closing performance","",A,"★ Closing"]];
+
+const CODES=["I","S","L","P","C","X","B","H","T"];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let me=store.get("shtr-me")||"";
+let onlyMine=store.get("shtr-only")==="1";
+const now=new Date();
+const pad=n=>String(n).padStart(2,"0");
+const today=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+const dt=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const fmt=(s,o)=>dt(s).toLocaleDateString("en-CA",o);
+const isCalled=(row,who)=>!who||who==="CREW"||row[6]===A||row[6].includes(who);
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function chips(){
+  const el=document.getElementById("chips");
+  const opts=[["","Everyone"],...CAST.map(c=>[c[0],SHORT[c[0]]])];
+  el.innerHTML=opts.map(([k,l])=>`<button type="button" class="chip" id="chip-${k||"all"}" data-k="${k}" aria-pressed="${k===me}">${l}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;me=b.dataset.k;store.set("shtr-me",me);render()};
+}
+function codesHTML(row){
+  if(row[6]===A) return `<span class="code full">FULL COMPANY + CREW</span>`;
+  return row[6].split("").map(c=>`<span class="code${c===me?" me":""}" title="${SHORT[c]}">${c}</span>`).join("")+`<span class="code" title="Christina Fyn">CF</span><span class="code" title="Laura Penny">LP</span>`;
+}
+function render(){
+  chips();
+  document.getElementById("onlyMine").checked=onlyMine;
+  document.getElementById("onlyMine").disabled=!me;
+  const out=[];let ph=-1;
+  for(const r of D){
+    if(r[0]==="BREAK"){out.push(`<div class="break"><strong>Winter break · Dec 20–26</strong><br>No rehearsals. Merry Christmas and happy Boxing Day.</div>`);continue}
+    const called=isCalled(r,me);
+    if(me&&onlyMine&&!called) continue;
+    if(r[1]!==ph){ph=r[1];const p=PHASES[ph];out.push(`<div class="phase" style="--pc:var(${p.c})"><strong>${p.name}</strong><span>${p.note}</span></div>`)}
+    const p=PHASES[r[1]];
+    const past=r[0]<today;
+    const status=me?`<span class="status ${called?"yes":"no"}">${called?"Called":"Not called"}</span>`:"";
+    out.push(`<div class="day${past?" past":""}${me&&!called?" notcalled":""}" style="--pc:var(${r[3]==="COSTUME"?"--amber":p.c})">
+      <div class="date"><div class="dow">${fmt(r[0],{weekday:"short"})}</div><div class="num">${dt(r[0]).getDate()}</div><div class="mon">${fmt(r[0],{month:"short"})}</div></div>
+      <div style="min-width:0">
+        <div class="top"><span class="time">${r[2]}</span>${r[3].split("+").map(t=>`<span class="badge">${t}</span>`).join("")}${r[7]?`<span class="flag">${esc(r[7])}</span>`:""}${status}</div>
+        <div class="work">${esc(r[4])}</div>
+        <div class="meta">${r[5]?`<span class="pages">${r[5]}</span>`:""}${codesHTML(r)}</div>
+      </div></div>`);
+  }
+  document.getElementById("schedule").innerHTML=out.join("");
+  // next call
+  const nx=D.find(r=>r[0]!=="BREAK"&&r[0]>=today&&isCalled(r,me));
+  const who=me?(CAST.find(c=>c[0]===me)[1]):"the company";
+  const nEl=document.getElementById("next");
+  if(nx){
+    const days=Math.round((dt(nx[0])-dt(today))/864e5);
+    const rel=days===0?"Today":days===1?"Tomorrow":`In ${days} days`;
+    nEl.innerHTML=`<div class="eyebrow">Next call for ${esc(who)} · ${rel}</div><div class="when">${fmt(nx[0],{weekday:"long",month:"long",day:"numeric"})}</div><div class="what">${nx[2]} · ${nx[3].replace("+"," + ")} · ${esc(nx[4])}${nx[5]?" · "+nx[5]:""}</div>`;
+  } else nEl.innerHTML=`<div class="eyebrow">That's a wrap</div><div class="when">Thanks for a great run</div>`;
+  const left=Math.round((dt("2027-01-29")-dt(today))/864e5);
+  document.getElementById("countdown").textContent=left>0?`${left} days to opening`:"";
+}
+document.getElementById("onlyMine").addEventListener("change",e=>{onlyMine=e.target.checked;store.set("shtr-only",onlyMine?"1":"0");render()});
+document.getElementById("castLegend").innerHTML=CAST.filter(c=>c[0]!=="CREW").map(c=>`<div><span class="code">${c[0]}</span>${c[1]}${c[2]?` <span class="small">(${c[2]})</span>`:""}</div>`).join("")+`<div><span class="code">CF</span>Christina Fyn <span class="small">(crew)</span></div><div><span class="code">LP</span>Laura Penny <span class="small">(crew)</span></div>`;
+render();
+</script>
